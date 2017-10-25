@@ -36,7 +36,7 @@ io.on('connection', function(socket){
 
     socket.on('joinroom',function(data){
         var room = data.room;
-        var nickname = socket.handshake.address.address;
+        var nickname = socket.request.connection.remoteAddress;
         socket.join(data.room);
 
         socket.room = room;
@@ -58,7 +58,7 @@ io.on('connection', function(socket){
     //chat message 이벤트 발생시 콘솔 출력
     socket.on('chat message', function(msg){
         data = {msg : ""};
-        io.sockets.in(socket.room).emit('chat message', socket.handshake.address + " : " +msg);
+        io.sockets.in(socket.room).emit('chat message', socket.request.connection.remoteAddress + " : " +msg);
     });
 
     //연결된 socket이 disconnect 됐을때
