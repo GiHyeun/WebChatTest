@@ -52,13 +52,13 @@ io.on('connection', function(socket){
 
         // broad cast join message
         data = {msg: ""};
-        io.sockets.in(room).emit('chat message', nickname + " 님이 "+room+"에 입장하셨습니다.");
+        io.sockets.to(room).emit('chat message', nickname + " 님이 "+room+"에 입장하셨습니다.");
     });
 
     //chat message 이벤트 발생시 콘솔 출력
     socket.on('chat message', function(msg){
         data = {msg : ""};
-        io.sockets.in(socket.room).emit('chat message', socket.request.connection.remoteAddress + " : " +msg);
+        io.sockets.to(socket.room).emit('chat message', socket.request.connection.remoteAddress + " : " +msg);
     });
 
     //연결된 socket이 disconnect 됐을때
