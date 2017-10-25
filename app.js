@@ -28,14 +28,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
+var rooms=[];
+
 //connect 됐을때 socket에 연결 정보 저장
 io.on('connection', function(socket){
     console.log('a user connected');
 
+    socket.on('joinroom',function(data){
+        var room = data.room;
+        var nickname = socket.handshake.address.address;
+        socket.join(data.room);
+
+        socket.room = room;
+        socket.nickname = nickname;
+        // Create Room
+        if (rooms[room] == undefined) {
+            console.log('room create :' + room);
+            rooms[room] = new Object();
+            rooms[room].socket_ids = new Object();
+        }
+        // Store current user's nickname and socket.id to MAP
+        rooms[room].socket_ids[nickname] = socket.id
+
+        // broad cast join message
+        data = {msg: ""};
+        io.sockets.in(room).emit('chat message', nickname + " 님이 "+room+"에 입장하셨습니다.");
+    });
+
     //chat message 이벤트 발생시 콘솔 출력
     socket.on('chat message', function(msg){
-        msg = socket.handshake.address + " : " +msg;
-        io.emit('chat message', msg);
+        data = {msg : ""};
+        io.sockets.in(socket.room).emit('chat message', socket.handshake.address + " : " +msg);
     });
 
     //연결된 socket이 disconnect 됐을때
