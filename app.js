@@ -49,7 +49,7 @@ io.on('connection', function(socket){
     socket.on('joinroom',function(data){
         var room = data.room;
         var nickname = socket.request.connection.remoteAddress;
-        console.log(JSON.stringify(data));
+        console.log(data);
         socket.join(data.room);
         socket.room = room;
         socket.nickname = nickname;
