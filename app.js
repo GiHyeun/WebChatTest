@@ -41,7 +41,7 @@ io.on('connection', function(socket){
             if (rooms[room].socket_ids != undefined && rooms[room].socket_ids[nickname] != undefined)
                 delete rooms[room].socket_ids[nickname];
         }
-        
+
         io.sockets.to(room).emit('chat message', nickname + ' 님이 나가셨습니다.');
     });
 
@@ -49,6 +49,7 @@ io.on('connection', function(socket){
     socket.on('joinroom',function(data){
         var room = data.room;
         var nickname = socket.request.connection.remoteAddress;
+        console.log(JSON.stringify(data));
         socket.join(data.room);
         socket.room = room;
         socket.nickname = nickname;
