@@ -29,6 +29,7 @@ html
     script(src="https://code.jquery.com/jquery-1.11.1.js")
     script(type='text/javascript').
         var socket = io();
+        var room = "room1";
         socket.emit('joinroom', {room: "room1"});
         $(function () {
             $('form').submit(function () {
@@ -44,5 +45,7 @@ html
         function roomChange(value) {
             console.log(value);
             $(messages).empty();
+            socket.emit('leaveroom', {room: room});
+            room = value;
             socket.emit('joinroom', {room: value});
         }

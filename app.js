@@ -33,12 +33,23 @@ var rooms=[];
 //connect 됐을때 socket에 연결 정보 저장
 io.on('connection', function(socket){
     console.log('a user connected');
+    socket.on('leaveroom',function(data) {
+        var room = data.room;
+        var nickname = socket.request.connection.remoteAddress;
+        socket.leave(room);
+        if (nickname != undefined) {
+            if (rooms[room].socket_ids != undefined && rooms[room].socket_ids[nickname] != undefined)
+                delete rooms[room].socket_ids[nickname];
+        }
+        
+        io.sockets.to(room).emit('chat message', nickname + ' 님이 나가셨습니다.');
+    });
+
 
     socket.on('joinroom',function(data){
         var room = data.room;
         var nickname = socket.request.connection.remoteAddress;
         socket.join(data.room);
-
         socket.room = room;
         socket.nickname = nickname;
         // Create Room
@@ -58,6 +69,7 @@ io.on('connection', function(socket){
     //chat message 이벤트 발생시 콘솔 출력
     socket.on('chat message', function(msg){
         data = {msg : ""};
+        console.log(socket.room);
         io.sockets.to(socket.room).emit('chat message', socket.request.connection.remoteAddress + " : " +msg);
     });
 
