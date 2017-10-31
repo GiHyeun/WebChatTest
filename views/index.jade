@@ -33,13 +33,13 @@ html
         socket.emit('joinroom', {room: "room1"});
         $(function () {
             $('form').submit(function () {
-                socket.emit('chat message', $('#m').val());
+                socket.emit('chat message', {msg: $('#m').val(), id: 'you', name: '전지응'});
                 $('#m').val('');
                 return false;
             });
             socket.on('chat message', function (data) {
                 console.log(data);
-                $('#messages').append($('<li>').text(data));
+                $('#messages').append($('<li>').text(data.msg));
             });
         });
         function roomChange(value) {

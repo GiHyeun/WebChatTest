@@ -60,18 +60,15 @@ io.on('connection', function(socket){
             rooms[room].socket_ids = new Object();
         }
         // Store current user's nickname and socket.id to MAP
-        rooms[room].socket_ids[nickname] = socket.id
-
-        // broad cast join message
-        data = {msg: ""};
-        io.sockets.to(room).emit('chat message', nickname + " 님이 "+room+"에 입장하셨습니다.");
+        rooms[room].socket_ids[nickname] = socket.id;
     });
 
     //chat message 이벤트 발생시 콘솔 출력
-    socket.on('chat message', function(msg){
-        data = {msg : ""};
-        console.log(socket.room);
-        io.sockets.to(socket.room).emit('chat message', socket.request.connection.remoteAddress + " : " +msg);
+    socket.on('chat message', function(data){
+        var date = new Date();
+        messagedata = {msg: data.msg, date:date.get, id:data.id, name:data.name};
+        console.log(messagedata);
+        io.sockets.to(socket.room).emit('chat message', messagedata);
     });
 
     //연결된 socket이 disconnect 됐을때
