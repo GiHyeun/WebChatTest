@@ -66,7 +66,7 @@ io.on('connection', function(socket){
     //chat message 이벤트 발생시 콘솔 출력
     socket.on('chat message', function(data){
         var date = new Date();
-        messagedata = {msg: data.msg, date:date.get, id:data.id, name:data.name};
+        messagedata = {msg: data.msg, date:date.getDate(), id:data.id, name:data.name};
         console.log(messagedata);
         io.sockets.to(socket.room).emit('chat message', messagedata);
     });
